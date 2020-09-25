@@ -125,6 +125,24 @@ class RPCClient
     }
 
     /**
+     * @return int
+     * @throws RPCException
+     */
+    public function latestBlockHeight(): int
+    {
+        $height = $this->nodeStatus()["sync_info"]["latest_block_height"] ?? null;
+        if (is_string($height) && preg_match('/^[0-9]+$/', $height)) {
+            $height = (int)$height;
+        }
+
+        if (!is_int($height) || $height < 0) {
+            throw new RPCException('Could not retrieve latest block height');
+        }
+
+        return $height;
+    }
+
+    /**
      * @param string $endpoint
      * @param array|null $payload
      * @param string $httpMethod
