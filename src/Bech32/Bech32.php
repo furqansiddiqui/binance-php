@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace FurqanSiddiqui\Binance\Bech32;
 
+use Comely\DataTypes\Buffer\Binary;
 use FurqanSiddiqui\Binance\Exceptions\Bech32Exception;
 
 /**
@@ -23,6 +24,18 @@ class Bech32
         -1, 29, -1, 24, 13, 25, 9, 8, 23, -1, 18, 22, 31, 27, 19, -1,
         1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, -1, -1, -1, -1, -1
     ];
+
+    /**
+     * @param string $addr
+     * @return Binary
+     * @throws Bech32Exception
+     */
+    public static function AddressDecode(string $addr): Binary
+    {
+        $decoded = self::decode($addr)[1];
+        $hash160 = implode("", array_map("chr", self::convertBits($decoded, count($decoded), 5, 8, true)));
+        return new Binary($hash160);
+    }
 
     /**
      * @param int[] $values

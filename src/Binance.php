@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace FurqanSiddiqui\Binance;
 
 use FurqanSiddiqui\Binance\Accounts\AccountsFactory;
+use FurqanSiddiqui\Binance\RPC\RPCClient;
 use FurqanSiddiqui\ECDSA\Curves\Secp256k1;
 
 /**
@@ -12,10 +13,15 @@ use FurqanSiddiqui\ECDSA\Curves\Secp256k1;
  */
 class Binance
 {
+    /** @var int */
+    public const PRECISION = 8;
+
     /** @var string */
     private string $network;
     /** @var AccountsFactory */
     private AccountsFactory $accounts;
+    /** @var RPCClient */
+    private RPCClient $rpcClient;
 
     /**
      * Binance constructor.
@@ -29,6 +35,7 @@ class Binance
 
         $this->network = $network;
         $this->accounts = new AccountsFactory($this);
+        $this->rpcClient = new RPCClient($this);
     }
 
     /**
@@ -60,6 +67,14 @@ class Binance
     public function accounts(): AccountsFactory
     {
         return $this->accounts;
+    }
+
+    /**
+     * @return RPCClient
+     */
+    public function rpcClient(): RPCClient
+    {
+        return $this->rpcClient;
     }
 
     /**
