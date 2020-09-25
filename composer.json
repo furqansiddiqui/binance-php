@@ -19,10 +19,15 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-json": "*",
-    "furqansiddiqui/ecdsa-php": "^0.2.0"
+    "furqansiddiqui/ecdsa-php": "^0.2.0",
+    "comely-io/http": "^1.0.48",
+    "google/protobuf": "^v3.13.0"
   },
   "autoload": {
     "psr-4": {
+      "": [
+        "proto/generated"
+      ],
       "FurqanSiddiqui\\Binance\\": [
         "src"
       ]

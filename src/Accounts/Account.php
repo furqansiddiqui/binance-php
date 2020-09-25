@@ -221,6 +221,10 @@ class Account
      * @param string $denom
      * @param bool $resetSeq
      * @return TransferTx
+     * @throws AccountNotExistException
+     * @throws AccountsException
+     * @throws Bech32Exception
+     * @throws RPCException
      * @throws \FurqanSiddiqui\Binance\Exceptions\TransactionException
      */
     public function transfer(string $to, string $amount, string $denom, bool $resetSeq = true): TransferTx

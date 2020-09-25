@@ -25,8 +25,8 @@ abstract class AbstractTransaction
     protected Binance $bnb;
     /** @var Account */
     protected Account $from;
-    /** @var string|null */
-    protected ?string $memo = null;
+    /** @var string */
+    protected string $memo = "";
     /** @var array */
     protected array $signatures;
     /** @var int */
