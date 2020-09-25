@@ -110,6 +110,21 @@ class RPCClient
     }
 
     /**
+     * @return array|null
+     * @throws RPCException
+     */
+    public function nodeStatus(): array
+    {
+        $nodeStatus = $this->call("/status", null, "GET");
+        $result = $nodeStatus["result"];
+        if (!is_array($result) || !$result) {
+            throw new RPCException('Could not retrieve node status; Bad response');
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $endpoint
      * @param array|null $payload
      * @param string $httpMethod
