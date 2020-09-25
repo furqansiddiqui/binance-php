@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace FurqanSiddiqui\Binance\Accounts;
 
 use Binance\Proto\AppAccount;
+use Binance\Proto\Send\Token;
 use Comely\DataTypes\Buffer\Base16;
 use FurqanSiddiqui\Binance\Bech32\Bech32;
 use FurqanSiddiqui\Binance\Binance;
@@ -170,6 +171,22 @@ class Account
         $appAccount = $this->bnb->rpcClient()->getAppAccountObject($this->address);
         $this->useAppAccountObject($appAccount);
         return $this;
+    }
+
+    /**
+     * @return array
+     * @throws AccountsException
+     */
+    public function getBalances(): array
+    {
+        $balances = [];
+        $coins = $this->getBaseAccountObj()->getCoins();
+        /** @var Token $coin */
+        foreach ($coins as $coin) {
+            $balances[$coin->getDenom()] = $coin->getAmount();
+        }
+
+        return $balances;
     }
 
     /**
