@@ -76,4 +76,46 @@ class DEX_BNB
 
         return $res->payload()->array();
     }
+
+    /**
+     * @param string $bnbAccount
+     * @param int|null $startTime
+     * @param string|null $txType
+     * @param int|null $offset
+     * @param int $limit
+     * @return array
+     * @throws DEXException
+     */
+    public static function AccountTransactions(string $bnbAccount, ?int $startTime = null, ?string $txType = null, ?int $offset = null, int $limit = 1000): array
+    {
+        try {
+            $queryData = [
+                "address" => $bnbAccount,
+                "limit" => $limit,
+            ];
+
+            if ($txType) {
+                $queryData["txType"] = $txType;
+            }
+
+            if ($startTime) {
+                $queryData["startTime"] = $startTime . "000";
+            }
+
+            if ($offset) {
+                $queryData["offset"] = $offset;
+            }
+
+            $req = new Request("GET", self::HOSTNAME . "/api/v1/transactions?" . http_build_query($queryData));
+            $curl = $req->curl();
+            $curl->ssl()->verify(false);
+            $curl->expectJSON();
+            $res = $curl->send();
+        } catch (HttpException $e) {
+            trigger_error(sprintf('[%s][%s] %s', get_class($e), $e->getCode(), $e->getMessage()));
+            throw new DEXException('Failed to retrieve account transactions');
+        }
+
+        return $res->payload()->array();
+    }
 }
