@@ -78,6 +78,44 @@ class DEX_BNB
     }
 
     /**
+     * @return array
+     * @throws DEXException
+     */
+    public static function NodeStatus(): array
+    {
+        try {
+            $req = new Request("GET", self::HOSTNAME . "/api/v1/node-info");
+            $curl = $req->curl();
+            $curl->ssl()->verify(false);
+            $curl->expectJSON();
+            $res = $curl->send();
+        } catch (HttpException $e) {
+            trigger_error(sprintf('[%s][%s] %s', get_class($e), $e->getCode(), $e->getMessage()));
+            throw new DEXException('Failed to retrieve node info');
+        }
+
+        return $res->payload()->array();
+    }
+
+    /**
+     * @return int
+     * @throws DEXException
+     */
+    public static function LatestBlockHeight(): int
+    {
+        $height = self::NodeStatus()["sync_info"]["latest_block_height"] ?? null;
+        if (is_string($height) && preg_match('/^[0-9]+$/', $height)) {
+            $height = (int)$height;
+        }
+
+        if (!is_int($height) || $height < 0) {
+            throw new DEXException('Could not retrieve latest block height');
+        }
+
+        return $height;
+    }
+
+    /**
      * @param string $bnbAccount
      * @param int|null $startTime
      * @param string|null $txType
